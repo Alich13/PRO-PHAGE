@@ -17,12 +17,13 @@ rm(list = ls())
 source_python("protein_from_taxon.py")
 source_python("prosite.py")
 source_python("retrieve_protein_byid.py")
+source_python("splitR.py")
 Sys.setenv(BLASTDB="/home/ali/blastdb")
 Sys.setenv(PATH=paste(Sys.getenv("PATH"), "/home/ali/ncbi-blast-2.10.0+/bin" , sep=":"))
 
 server <- function(input, output,session) { 
   
-  setwd("~/shiny app")
+  setwd("~/shiny_app")
   phages_names<- read.csv('./data/phages_names_hosts.csv',stringsAsFactors = F,header=T)
   phages_names=phages_names[-c(1)]
   
@@ -304,6 +305,7 @@ btn_2<-observeEvent(input$btn2,{
           print(blast_results)
           
           seqs <- readAAStringSet("protein_uniprot.fasta", format = "fasta")
+          names(seqs)=splitR(names(seqs))
           if (length(seqs)>1){
             aligned <<- AlignSeqs(seqs)
             writeXStringSet(aligned,
@@ -321,14 +323,10 @@ btn_2<-observeEvent(input$btn2,{
             tre.new$tip.label <- aligned@ranges@NAMES
             
             
-            ggtre1 <- ggtree(tre) + 
-              geom_tiplab(hjust = -0.3, size=4, align = TRUE)+
-              xlim(0,0.5)
+            ggtre1 <- ggtree(tre) + geom_tiplab(size=3)
             
-            ggtre2 <-msaplot(p=ggtree(tre.new), fasta="Amanita_aligned.fasta"
-                            )+
-              scale_fill_viridis_d(alpha = 0.8)
-            
+            ggtre2 <- ggtree(tre) + geom_tiplab(size=3)
+            msaplot(ggtre2, "Amanita_aligned.fasta" , offset=0.5, width=2)
             
             output$tree1<-renderPlot({
               plot(ggtre1, cex = 0.6)
