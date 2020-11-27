@@ -9,6 +9,11 @@ It is a tool that automates and facilitates the analysis of the primary sequence
 
 ##REQUIREMENTS
 
-you need to install blast +  2.10  
+tools used :
+#rshiny framework to turn our analyses into interactive web application .
+Embedded #python3 scripts within R to actually perform the analyses and predictions.
+#Shiny_Server and #RStudio Server which are deployed
+on a #Google_Cloud_virtual_machine.
+#NCBI_blast+_2.10 software installed on the Virtual machine alongside with two curated protein databases PDBaa and Swissprot protein regularly updated .
 
 
